@@ -9,3 +9,4 @@ __queuestorage__
 __azurite_db*__.json
 
 *.dll
+*.pdb
