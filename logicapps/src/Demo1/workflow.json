@@ -1,0 +1,67 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Create_file": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "filePath": "u123\\archive\\@{triggerBody()?['name']}",
+                        "body": "@body('Get_file_content_(V2)')"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "FileSystem",
+                        "operationId": "createFile",
+                        "serviceProviderId": "/serviceProviders/FileSystem"
+                    }
+                },
+                "runAfter": {
+                    "Get_file_content_(V2)": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "Get_file_content_(V2)": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "filePath": "@triggerBody()?['path']"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "FileSystem",
+                        "operationId": "getFileContentV2",
+                        "serviceProviderId": "/serviceProviders/FileSystem"
+                    }
+                },
+                "runAfter": {}
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_a_file_is_added_or_updated": {
+                "type": "ServiceProvider",
+                "kind": "Polling",
+                "inputs": {
+                    "parameters": {
+                        "folderPath": "u123"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "FileSystem",
+                        "operationId": "whenFilesAreAddedOrModified",
+                        "serviceProviderId": "/serviceProviders/FileSystem"
+                    }
+                },
+                "recurrence": {
+                    "interval": 3,
+                    "frequency": "Minute"
+                },
+                "trackedProperties": {
+                    "integrationcode": "u123"
+                },
+                "splitOn": "@triggerOutputs()?['body']"
+            }
+        }
+    },
+    "kind": "Stateful"
+}
