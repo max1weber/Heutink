@@ -2,12 +2,12 @@
     "definition": {
         "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
         "actions": {
-            "Create_file": {
+            "Create_Archive_File_": {
                 "type": "ServiceProvider",
                 "inputs": {
                     "parameters": {
                         "filePath": "u123\\archive\\@{triggerBody()?['name']}",
-                        "body": "@body('Get_file_content_(V2)')"
+                        "body": "@body('Get_file_content_from_new_or_added_file_(v2)')"
                     },
                     "serviceProviderConfiguration": {
                         "connectionName": "FileSystem",
@@ -16,12 +16,12 @@
                     }
                 },
                 "runAfter": {
-                    "Get_file_content_(V2)": [
+                    "Get_file_content_from_new_or_added_file_(v2)": [
                         "SUCCEEDED"
                     ]
                 }
             },
-            "Get_file_content_(V2)": {
+            "Get_file_content_from_new_or_added_file_(v2)": {
                 "type": "ServiceProvider",
                 "inputs": {
                     "parameters": {
@@ -34,12 +34,31 @@
                     }
                 },
                 "runAfter": {}
+            },
+            "Delete_file": {
+                "type": "ServiceProvider",
+                "inputs": {
+                    "parameters": {
+                        "filePath": "@triggerBody()?['path']",
+                        "skipIfFileNotPresent": true
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "FileSystem",
+                        "operationId": "deleteFile",
+                        "serviceProviderId": "/serviceProviders/FileSystem"
+                    }
+                },
+                "runAfter": {
+                    "Create_Archive_File_": [
+                        "SUCCEEDED"
+                    ]
+                }
             }
         },
         "contentVersion": "1.0.0.0",
         "outputs": {},
         "triggers": {
-            "When_a_file_is_added_or_updated": {
+            "When_a_file_is_added_or_updated_in_u123": {
                 "type": "ServiceProvider",
                 "kind": "Polling",
                 "inputs": {
@@ -53,8 +72,9 @@
                     }
                 },
                 "recurrence": {
-                    "interval": 3,
-                    "frequency": "Minute"
+                    "interval": 1,
+                    "frequency": "Minute",
+                    "timeZone": "W. Europe Standard Time"
                 },
                 "trackedProperties": {
                     "integrationcode": "u123"

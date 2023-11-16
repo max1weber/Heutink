@@ -8,8 +8,7 @@
         "id": "/serviceProviders/FileSystem"
       },
       "displayName": "share"
-    },
-    
+    }
   },
   "managedApiConnections": {}
 }
