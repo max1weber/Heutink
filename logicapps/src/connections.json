@@ -9,25 +9,7 @@
       },
       "displayName": "share"
     },
-    "AzureCosmosDB": {
-      "parameterValues": {
-        "connectionString": "@appsetting('AzureCosmosDB_connectionString')"
-      },
-      "serviceProvider": {
-        "id": "/serviceProviders/AzureCosmosDB"
-      },
-      "displayName": "ok"
-    },
-    "azureTables": {
-      "parameterValues": {
-        "connectionString": "@appsetting('azureTables_connectionString')"
-      },
-      "parameterSetName": "connectionString",
-      "serviceProvider": {
-        "id": "/serviceProviders/azureTables"
-      },
-      "displayName": "zaza"
-    }
+    
   },
   "managedApiConnections": {}
 }
